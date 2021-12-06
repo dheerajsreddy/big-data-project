@@ -58,8 +58,10 @@ def pre_process(df):
 	
 	# Fit the model
 	#clf = MultinomialNB().partial_fit(X_train_tfidf, feature0, classes=np.unique(feature0))
-	clf = PassiveAggressiveClassifier().partial_fit(X_train_tfidf, feature0, classes=np.unique(feature0))
-	pipeline = Pipeline(([('vect', CountVectorizer()),('tfidf', TfidfTransformer()), ('clf', MultinomialNB())]))
+	passive=PassiveAggressiveClassifier(max_iter=1000, random_state=0,tol=1e-3)
+	clf =passive.partial_fit(X_train_tfidf, feature0,classes=np.unique(feature0))
+	
+	pipeline = Pipeline(([('vect', CountVectorizer()),('tfidf', TfidfTransformer()), ('passive', PassiveAggressiveClassifier())]))
 	pipeline.fit(train_data_x,train_data_y)
 	
 	predicted = pipeline.predict(test_data_x)
